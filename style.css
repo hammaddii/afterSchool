@@ -1,57 +1,111 @@
-/* General Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
 body {
     font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #EEEEEE;
+    background-color: #f0f0f0;
 }
 
-
-/* Header Styles */
-
 header {
-    background-color: #3B1E54;
+    background-color: #556b2f;
     color: white;
-    padding: 10px;
+    padding: 20px;
+    text-align: center;
+}
+
+header h1 {
+    margin: 0;
+}
+
+button {
+    background-color: red;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+main {
+    padding: 20px;
+}
+
+.sort-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-header button {
-    background-color: #DCBFFF;
-    color: black;
-    border: none;
-    padding: 10px 20px;
-    cursor: pointer;
-    border-radius: 5px;
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-
-/* Subject Item Styles */
+.search-bar {
+    margin-left: 20px;
+}
 
 .subjects-container {
     display: flex;
     flex-wrap: wrap;
-    justify-content: flex-start;
-    margin: 20px;
+    margin-top: 20px;
 }
 
 .subject-item {
-    background-color: #D4BEE4;
-    border: 1px solid #c2c2c2;
-    border-radius: 8px;
-    padding: 10px;
-    width: calc(33.333% - 15px);
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin: 10px;
+    padding: 15px;
+    flex: 1 1 200px;
+    max-width: 200px;
+    text-align: center;
+}
+
+.subject-item img {
+    max-width: 100%;
+    height: auto;
+}
+
+.checkout-container {
+    background-color: white;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
     margin-bottom: 15px;
 }
 
+.form-group {
+    flex: 1;
+    margin: 0 10px;
+}
 
-/* Checkout Container Styles */
+.full-width {
+    flex: 100%;
+}
 
-.checkout-container {
-    padding: 20px;
-    background-color: #f9f9f9;
-    border-radius: 10px;
+.checkout-form input {
+    width: 100%;
+    padding: 8px;
+}
+
+.checkout-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.total-value {
+    font-weight: bold;
+}
+
+.card-input {
+    margin-top: 15px;
 }
