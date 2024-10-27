@@ -1,64 +1,134 @@
-<main>
-    <div v-if="showProduct">
-        <h2>Available Subjects</h2>
-        <div class="product" v-for="product in products" :key="product.id">
-            <img :src="product.image" alt="product.subject">
-            <h3>{{ product.subject }}</h3>
-            <p>Price: {{ product.price }}</p>
-            <p>Available: {{ product.availableSpace }}</p>
-            <button @click="addToCart(product)" :disabled="!canAddToCart(product)">Add to Cart</button>
-        </div>
-    </div>
-    <div v-else>
-        <h2>Checkout</h2>
-        <form @submit.prevent="submitForm">
-            <label>
-                First Name:
-                <input type="text" v-model="order.firstName" required>
-            </label>
-            <label>
-                Last Name:
-                <input type="text" v-model="order.lastName" required>
-            </label>
-            <label>
-                Address:
-                <input type="text" v-model="order.address" required>
-            </label>
-            <label>
-                Contact:
-                <input type="text" v-model="order.contact">
-            </label>
-            <label>
-                Email:
-                <input type="email" v-model="order.email">
-            </label>
-            <label>
-                Payment Method:
-                <select v-model="order.paymentMethod">
-                    <option value="Cash">Cash</option>
-                    <option value="Card">Card</option>
-                </select>
-            </label>
-            <div v-if="order.paymentMethod === 'Card'">
-                <label>
-                    Card Number:
-                    <input type="text" v-model="order.cardNumber">
-                </label>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>After School Club</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="products.js"></script>
+    <script src="vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1>{{sitename}}</h1>
+            <button v-on:click="showCheckout">
+                {{totalCartItemCount}} <span class="fas fa-cart-plus"></span> Checkout
+            </button>
+        </header>
+
+        <main>
+            <div v-if="showProduct">
+                <div class="sort-container">
+                    <div class="header-container">
+                        <h2>Available Clubs:</h2>
+                        <div class="search-bar">
+                            <input type="text" v-model="searchQuery" placeholder="Search by Clubs...">
+                        </div>
+                        <div class="sorting-dropdown">
+                            <button class="dropdown-button" @click="toggleDropdown">
+                                Sort: {{sortCriterion.field ? sortCriterion.field.charAt(0).toUpperCase() + sortCriterion.field.slice(1) : 'Default'}}
+                            </button>
+                            <div class="dropdown-menu" :class="{show: isDropdownVisible}">
+                                <div @click="sort('default')" class="dropdown-item">Default</div>
+                                <div @click="sort('subject')" class="dropdown-item">Subject</div>
+                                <div @click="sort('price')" class="dropdown-item">Price</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="subjects-container">
+                    <div class="subject-item" v-for="product in filteredProducts" :key="product.id">
+                        <figure>
+                            <img v-bind:src="product.image" :alt="product.subject">
+                        </figure>
+                        <h3>{{product.subject}} - {{product.price}} AED</h3>
+                        <p>Location: {{product.location}}</p>
+                        <p>Available Space: {{product.availableSpace}}</p>
+                        <div>
+                            <span v-for="n in product.rating">★</span>
+                            <span v-for="n in 5 - product.rating">☆</span>
+                        </div>
+                        <button v-on:click="addToCart(product)" v-if="canAddToCart(product)">Add to Cart</button>
+                        <button disabled v-else>No Space Available</button>
+                        <span v-if="product.availableSpace === 0">All out!</span>
+                        <span v-else-if="product.availableSpace <= 5">Only {{product.availableSpace}} spaces left!</span>
+                        <span v-else>Book now!</span>
+                    </div>
+                </div>
             </div>
-            <h3>Cart Items ({{ totalCartItemCount }})</h3>
-            <ul>
-                <li v-for="item in cart" :key="item.id">
-                    <span>{{ item.subject }} ({{ item.count }})</span>
-                    <span>Price: {{ item.price }}</span>
-                    <button @click="increaseQuantity(item)">+</button>
-                    <button @click="decreaseQuantity(item)">-</button>
-                    <button @click="removeFromCart(item)">Remove</button>
-                </li>
-            </ul>
-            <h3>Total: {{ totalCartValue }}</h3>
-            <button type="submit">Submit Order</button>
-        </form>
-        <button @click="showProduct">Back to Products</button>
-        <div v-if="feedbackMessage" :class="feedbackType">{{ feedbackMessage }}</div>
+
+            <div v-else class="checkout-container">
+                <h2>Checkout</h2>
+                <div class="checkout-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input id="firstName" v-model="order.firstName" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input id="lastName" v-model="order.lastName" type="text" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <input id="address" v-model="order.address" type="text" required>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="contact">Contact Number:</label>
+                        <input id="contact" v-model="order.contact" type="text" @input="validateContact" required placeholder="+971000000000">
+                    </div>
+                    <div class="form-group full-width">
+                        <label for="email">Email:</label>
+                        <input id="email" v-model="order.email" type="email" required placeholder="yourname@example.com">
+                    </div>
+                </div>
+
+                <h3>Order Information:</h3>
+                <p>First Name: {{order.firstName}}</p>
+                <p>Last Name: {{order.lastName}}</p>
+                <p>Address: {{order.address}}</p>
+                <p>Contact: {{order.contact}}</p>
+                <p>Email: {{order.email}}</p>
+                <p><strong>Subjects:</strong></p>
+                <ul>
+                    <li v-for="item in cart" :key="item.id">
+                        <img :src="item.image" alt="subject image">
+                        <div class="subject-info">{{item.subject}} <strong>x{{item.count}}</strong></div>
+                        <div>{{item.count * item.price}} AED</div>
+                        <div class="quantity-control">
+                            <button @click="decreaseQuantity(item)">-</button>
+                            <button @click="increaseQuantity(item)">+</button>
+                            <button @click="removeFromCart(item)">Remove</button>
+                        </div>
+                    </li>
+                </ul>
+                <p class="total-value"><strong>Total Value:</strong> {{totalCartValue}} AED</p>
+                <div class="form-group full-width">
+                    <label>Payment Method:</label>
+                    <div>
+                        <label>
+                            <input type="radio" v-model="order.paymentMethod" value="Cash" required> Cash
+                        </label>
+                        <label>
+                            <input type="radio" v-model="order.paymentMethod" value="Card" required> Card
+                        </label>
+                    </div>
+                </div>
+                <div v-if="order.paymentMethod === 'Card'" class="form-group full-width card-input">
+                    <label for="cardNumber">Card Number:</label>
+                    <input id="cardNumber" v-model="order.cardNumber" type="number" placeholder="Enter your card number" required>
+                </div>
+                <button v-on:click="submitForm" class="place-order">Place Order</button>
+            </div>
+        </main>
     </div>
-</main>
+</body>
+
+</html>
