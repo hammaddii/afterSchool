@@ -2,9 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
     new Vue({
         el: '#app',
         data: {
-            sitename: 'After School Club',
-            showProduct: true,
-            products: products,
+            sitename: 'Online Course Registration',
+            products: [
+                { id: 1, subject: 'Mathematics', price: 200, availableSpace: 5, image: 'math.jpg' },
+                { id: 2, subject: 'Science', price: 250, availableSpace: 3, image: 'science.jpg' },
+                { id: 3, subject: 'History', price: 150, availableSpace: 4, image: 'history.jpg' }
+            ],
             cart: [],
             order: {
                 firstName: '',
@@ -13,44 +16,68 @@ document.addEventListener('DOMContentLoaded', function() {
                 contact: '',
                 email: '',
                 paymentMethod: 'Cash',
-                cardNumber: '',
+                cardNumber: ''
             },
-            isDropdownVisible: false,
-            searchQuery: '',
+            showProduct: true,
+            feedbackMessage: '',
+            feedbackType: ''
+        },
+        computed: {
+            totalCartItemCount() {
+                return this.cart.reduce((total, item) => total + item.count, 0);
+            },
+            totalCartValue() {
+                return this.cart.reduce((total, item) => total + (item.price * item.count), 0);
+            }
         },
         methods: {
             addToCart(product) {
-                const existingItem = this.cart.find(item => item.id === product.id);
-                if (existingItem) {
-                    existingItem.count += 1;
+                const found = this.cart.find(item => item.id === product.id);
+                if (found) {
+                    found.count++;
                 } else {
-                    this.cart.push({
-                        id: product.id,
-                        subject: product.subject,
-                        count: 1,
-                        price: product.price,
-                        image: product.image,
-                    });
+                    this.cart.push({...product, count: 1 });
                 }
-                product.availableSpace -= 1;
+                product.availableSpace--;
+            },
+            canAddToCart(product) {
+                return product.availableSpace > 0;
             },
             showCheckout() {
-                if (this.cart.length === 0) {
-                    alert("Your cart is empty. Please add items before checking out.");
-                    return;
-                }
-                this.showProduct = !this.showProduct;
+                this.showProduct = false;
             },
             submitForm() {
-                if (this.order.firstName && this.order.lastName && this.order.address && this.order.paymentMethod) {
-                    alert("Order Submitted!");
-                    this.cart = [];
-                    this.resetOrder();
+                if (this.validateForm()) {
+                    this.feedbackMessage = 'Order submitted successfully!';
+                    this.feedbackType = 'success';
+                    this.clearCart();
                 } else {
-                    alert("Please fill in all fields");
+                    this.feedbackMessage = 'Please fill in all required fields correctly.';
+                    this.feedbackType = 'error';
                 }
             },
-            resetOrder() {
+            validateForm() {
+                return this.order.firstName && this.order.lastName && this.order.address;
+            },
+            increaseQuantity(item) {
+                item.count++;
+            },
+            decreaseQuantity(item) {
+                if (item.count > 1) {
+                    item.count--;
+                }
+            },
+            removeFromCart(item) {
+                this.cart = this.cart.filter(i => i.id !== item.id);
+            },
+            clearCart() {
+                this.cart.forEach(item => {
+                    const product = this.products.find(p => p.id === item.id);
+                    if (product) {
+                        product.availableSpace += item.count;
+                    }
+                });
+                this.cart = [];
                 this.order = {
                     firstName: '',
                     lastName: '',
@@ -58,51 +85,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     contact: '',
                     email: '',
                     paymentMethod: 'Cash',
-                    cardNumber: '',
+                    cardNumber: ''
                 };
-            },
-            canAddToCart(product) {
-                return product.availableSpace > 0;
-            },
-            increaseQuantity(item) {
-                const product = this.products.find(p => p.id === item.id);
-                if (product && product.availableSpace > 0) {
-                    item.count += 1;
-                    product.availableSpace -= 1;
-                }
-            },
-            decreaseQuantity(item) {
-                if (item.count > 1) {
-                    item.count -= 1;
-                    const product = this.products.find(p => p.id === item.id);
-                    if (product) {
-                        product.availableSpace += 1;
-                    }
-                } else {
-                    this.removeFromCart(item);
-                }
-            },
-            removeFromCart(item) {
-                const index = this.cart.indexOf(item);
-                if (index > -1) {
-                    this.cart.splice(index, 1);
-                    const product = this.products.find(p => p.id === item.id);
-                    if (product) {
-                        product.availableSpace += item.count;
-                    }
-                }
-            },
-        },
-        computed: {
-            totalCartItemCount() {
-                return this.cart.reduce((total, item) => total + item.count, 0);
-            },
-            totalCartValue() {
-                return Math.round(this.cart.reduce((total, item) => total + (item.price * item.count), 0));
-            },
-        },
-        mounted() {
-            this.products = products;
+                this.showProduct = true;
+            }
         }
     });
 });

@@ -1,85 +1,64 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ sitename }}</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-
-<body>
-    <div id="app">
-        <header>
-            <h1>{{ sitename }}</h1>
-            <button @click="showCheckout">Checkout ({{ totalCartItemCount }})</button>
-        </header>
-        <main>
-            <div v-if="showProduct">
-                <h2>Available Subjects</h2>
-                <div class="product" v-for="product in products" :key="product.id">
-                    <img :src="product.image" alt="product.subject">
-                    <h3>{{ product.subject }}</h3>
-                    <p>Price: {{ product.price }}</p>
-                    <p>Available: {{ product.availableSpace }}</p>
-                    <button @click="addToCart(product)" :disabled="!canAddToCart(product)">Add to Cart</button>
-                </div>
-            </div>
-            <div v-else>
-                <h2>Checkout</h2>
-                <form @submit.prevent="submitForm">
-                    <label>
-                        First Name:
-                        <input type="text" v-model="order.firstName" required>
-                    </label>
-                    <label>
-                        Last Name:
-                        <input type="text" v-model="order.lastName" required>
-                    </label>
-                    <label>
-                        Address:
-                        <input type="text" v-model="order.address" required>
-                    </label>
-                    <label>
-                        Contact:
-                        <input type="text" v-model="order.contact">
-                    </label>
-                    <label>
-                        Email:
-                        <input type="email" v-model="order.email">
-                    </label>
-                    <label>
-                        Payment Method:
-                        <select v-model="order.paymentMethod">
-                            <option value="Cash">Cash</option>
-                            <option value="Card">Card</option>
-                        </select>
-                    </label>
-                    <div v-if="order.paymentMethod === 'Card'">
-                        <label>
-                            Card Number:
-                            <input type="text" v-model="order.cardNumber">
-                        </label>
-                    </div>
-                    <h3>Cart Items</h3>
-                    <ul>
-                        <li v-for="item in cart" :key="item.id">
-                            <span>{{ item.subject }} ({{ item.count }})</span>
-                            <span>Price: {{ item.price }}</span>
-                            <button @click="increaseQuantity(item)">+</button>
-                            <button @click="decreaseQuantity(item)">-</button>
-                            <button @click="removeFromCart(item)">Remove</button>
-                        </li>
-                    </ul>
-                    <h3>Total: {{ totalCartValue }}</h3>
-                    <button type="submit">Submit Order</button>
-                </form>
-                <button @click="showProduct">Back to Products</button>
-            </div>
-        </main>
+<main>
+    <div v-if="showProduct">
+        <h2>Available Subjects</h2>
+        <div class="product" v-for="product in products" :key="product.id">
+            <img :src="product.image" alt="product.subject">
+            <h3>{{ product.subject }}</h3>
+            <p>Price: {{ product.price }}</p>
+            <p>Available: {{ product.availableSpace }}</p>
+            <button @click="addToCart(product)" :disabled="!canAddToCart(product)">Add to Cart</button>
+        </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2"></script>
-    <script src="vue.js"></script>
-</body>
-
-</html>
+    <div v-else>
+        <h2>Checkout</h2>
+        <form @submit.prevent="submitForm">
+            <label>
+                First Name:
+                <input type="text" v-model="order.firstName" required>
+            </label>
+            <label>
+                Last Name:
+                <input type="text" v-model="order.lastName" required>
+            </label>
+            <label>
+                Address:
+                <input type="text" v-model="order.address" required>
+            </label>
+            <label>
+                Contact:
+                <input type="text" v-model="order.contact">
+            </label>
+            <label>
+                Email:
+                <input type="email" v-model="order.email">
+            </label>
+            <label>
+                Payment Method:
+                <select v-model="order.paymentMethod">
+                    <option value="Cash">Cash</option>
+                    <option value="Card">Card</option>
+                </select>
+            </label>
+            <div v-if="order.paymentMethod === 'Card'">
+                <label>
+                    Card Number:
+                    <input type="text" v-model="order.cardNumber">
+                </label>
+            </div>
+            <h3>Cart Items</h3>
+            <ul>
+                <li v-for="item in cart" :key="item.id">
+                    <span>{{ item.subject }} ({{ item.count }})</span>
+                    <span>Price: {{ item.price }}</span>
+                    <button @click="increaseQuantity(item)">+</button>
+                    <button @click="decreaseQuantity(item)">-</button>
+                    <button @click="removeFromCart(item)">Remove</button>
+                </li>
+            </ul>
+            <h3>Total: {{ totalCartValue }}</h3>
+            <button type="submit">Submit Order</button>
+        </form>
+        <button @click="showProduct">Back to Products</button>
+        <div v-if="feedbackMessage" :class="feedbackType">{{ feedbackMessage }}</div>
+    </div>
+</main>
