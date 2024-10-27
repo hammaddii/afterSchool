@@ -1,12 +1,11 @@
-let products = [
-    {
+let products = [{
         id: 201,
         subject: "Art Club",
         location: "Art Room",
         price: 15,
         availableSpace: 10,
         image: "images/art_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 202,
@@ -15,7 +14,7 @@ let products = [
         price: 20,
         availableSpace: 8,
         image: "images/drama_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 203,
@@ -24,7 +23,7 @@ let products = [
         price: 10,
         availableSpace: 5,
         image: "images/code_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 204,
@@ -33,7 +32,7 @@ let products = [
         price: 12,
         availableSpace: 6,
         image: "images/sci_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 205,
@@ -42,7 +41,7 @@ let products = [
         price: 18,
         availableSpace: 12,
         image: "images/music_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 206,
@@ -51,7 +50,7 @@ let products = [
         price: 18,
         availableSpace: 16,
         image: "images/math_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 207,
@@ -60,7 +59,7 @@ let products = [
         price: 18,
         availableSpace: 8,
         image: "images/lang_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 208,
@@ -69,7 +68,7 @@ let products = [
         price: 22,
         availableSpace: 9,
         image: "images/photo_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 209,
@@ -78,7 +77,7 @@ let products = [
         price: 10,
         availableSpace: 14,
         image: "images/chess_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 210,
@@ -87,7 +86,7 @@ let products = [
         price: 25,
         availableSpace: 7,
         image: "images/robo_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 211,
@@ -96,7 +95,7 @@ let products = [
         price: 20,
         availableSpace: 10,
         image: "images/baking_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 213,
@@ -105,7 +104,7 @@ let products = [
         price: 12,
         availableSpace: 6,
         image: "images/garden_club.png",
-        rating: 4,  
+        rating: 4,
     },
     {
         id: 214,
@@ -114,6 +113,6 @@ let products = [
         price: 18,
         availableSpace: 10,
         image: "images/dance_club.png",
-        rating: 4,  
+        rating: 4,
     },
 ]
