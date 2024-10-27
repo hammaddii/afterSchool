@@ -45,7 +45,7 @@
                     <input type="text" v-model="order.cardNumber">
                 </label>
             </div>
-            <h3>Cart Items</h3>
+            <h3>Cart Items ({{ totalCartItemCount }})</h3>
             <ul>
                 <li v-for="item in cart" :key="item.id">
                     <span>{{ item.subject }} ({{ item.count }})</span>
