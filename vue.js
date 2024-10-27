@@ -88,6 +88,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     cardNumber: ''
                 };
                 this.showProduct = true;
+                this.feedbackMessage = '';
+                this.feedbackType = '';
             }
         }
     });
