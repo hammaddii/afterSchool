@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>After School Club</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
+    <script src="products.js"></script>
+    <script src="vue.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <header>
+            <h1>{{sitename}}</h1>
+            <button v-on:click="showCheckout">
+                {{totalCartItemCount}} <span class="fas fa-cart-plus"></span> Checkout
+            </button>
+        </header>
+
+        <main>
+            <div v-if="showProduct">
+                <h2>Available Clubs:</h2>
+                <div class="subjects-container">
+                    <div class="subject-item" v-for="product in filteredProducts" :key="product.id">
+                        <h3>{{product.subject}} - {{product.price}} AED</h3>
+                        <button v-on:click="addToCart(product)" v-if="canAddToCart(product)">Add to Cart</button>
+                        <button disabled v-else>No Space Available</button>
+                    </div>
+                </div>
+            </div>
+
+            <div v-else class="checkout-container">
+                <h2>Checkout</h2>
+                <div class="checkout-form">
+                    <div>
+                        <label for="firstName">First Name:</label>
+                        <input id="firstName" v-model="order.firstName" type="text" required>
+                    </div>
+                    <button v-on:click="submitForm">Place Order</button>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+
+</html>
