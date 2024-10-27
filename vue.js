@@ -44,9 +44,22 @@ document.addEventListener('DOMContentLoaded', function() {
             submitForm() {
                 if (this.order.firstName && this.order.lastName && this.order.address && this.order.paymentMethod) {
                     alert("Order Submitted!");
+                    this.cart = [];
+                    this.resetOrder();
                 } else {
                     alert("Please fill in all fields");
                 }
+            },
+            resetOrder() {
+                this.order = {
+                    firstName: '',
+                    lastName: '',
+                    address: '',
+                    contact: '',
+                    email: '',
+                    paymentMethod: 'Cash',
+                    cardNumber: '',
+                };
             },
             canAddToCart(product) {
                 return product.availableSpace > 0;
