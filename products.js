@@ -48,7 +48,7 @@ let products = [{
         subject: "Maths Club",
         location: "Room 302",
         price: 18,
-        availableSpace: 16,
+        availableSpace: 9,
         image: "images/math_club.png",
         rating: 4,
     },
