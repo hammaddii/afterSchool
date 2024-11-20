@@ -64,7 +64,20 @@
             </div>
 
             <div v-else class="checkout-container">
-                <h2>Checkout</h2>
+                <h3>Cart:</h3>
+                <ul>
+                    <li v-for="item in cart" :key="item.id">
+                        <img :src="item.image" alt="subject image">
+                        <div class="subject-info">{{item.subject}} <strong>x{{item.count}}</strong></div>
+                        <div style="margin-right: 10px">{{item.count * item.price}} AED</div>
+                        <div class="quantity-control">
+                            <button @click="decreaseQuantity(item)">-</button>
+                            <button @click="increaseQuantity(item)">+</button>
+                            <button @click="removeFromCart(item)">Remove</button>
+                        </div>
+                    </li>
+                </ul>
+                <h3>Checkout</h3>
                 <div class="checkout-form">
                     <div class="form-row">
                         <div class="form-group">
@@ -96,19 +109,7 @@
                 <p>Address: {{order.address}}</p>
                 <p>Contact: {{order.contact}}</p>
                 <p>Email: {{order.email}}</p>
-                <p><strong>Subjects:</strong></p>
-                <ul>
-                    <li v-for="item in cart" :key="item.id">
-                        <img :src="item.image" alt="subject image">
-                        <div class="subject-info">{{item.subject}} <strong>x{{item.count}}</strong></div>
-                        <div>{{item.count * item.price}} AED</div>
-                        <div class="quantity-control">
-                            <button @click="decreaseQuantity(item)">-</button>
-                            <button @click="increaseQuantity(item)">+</button>
-                            <button @click="removeFromCart(item)">Remove</button>
-                        </div>
-                    </li>
-                </ul>
+
                 <p class="total-value"><strong>Total Value:</strong> {{totalCartValue}} AED</p>
                 <div class="form-group full-width">
                     <label>Payment Method:</label>
