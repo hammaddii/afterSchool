@@ -8,17 +8,18 @@
     <link rel="stylesheet" href="style.css">
     <script src="https://cdn.jsdelivr.net/npm/vue@2.7.16/dist/vue.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="products.js"></script>
     <script src="vue.js"></script>
 </head>
 
 <body>
     <div id="app">
         <header>
-            <h1>{{sitename}}</h1>
-            <button v-on:click="showCheckout">
-                {{totalCartItemCount}} <span class="fas fa-cart-plus"></span> Checkout
+            <a href="/" class="site-title">
+                <h1>{{ sitename }}</h1>
+            </a>
+            <!-- Only show the checkout button if there are items in the cart -->
+            <button v-if="totalCartItemCount > 0" v-on:click="showCheckout">
+                {{ totalCartItemCount }} <span class="fas fa-cart-plus"></span> Checkout
             </button>
         </header>
 
@@ -31,13 +32,22 @@
                             <input type="text" v-model="searchQuery" placeholder="Search by Clubs...">
                         </div>
                         <div class="sorting-dropdown">
+                            <div class="sorting-buttons">
+                                <button @click="sortCriterion.order = 'asc'; sortProducts()">&uarr;</button>
+                            </div>
                             <button class="dropdown-button" @click="toggleDropdown">
-                                Sort: {{sortCriterion.field ? sortCriterion.field.charAt(0).toUpperCase() + sortCriterion.field.slice(1) : 'Default'}}
+                                {{ sortCriterion.field.charAt(0).toUpperCase() + sortCriterion.field.slice(1) }}
                             </button>
                             <div class="dropdown-menu" :class="{show: isDropdownVisible}">
-                                <div @click="sort('default')" class="dropdown-item">Default</div>
-                                <div @click="sort('subject')" class="dropdown-item">Subject</div>
-                                <div @click="sort('price')" class="dropdown-item">Price</div>
+                                <div @click="sortField('default')" class="dropdown-item">Default</div>
+                                <div @click="sortField('subject')" class="dropdown-item">Subject</div>
+                                <div @click="sortField('price')" class="dropdown-item">Price</div>
+                                <div @click="sortField('location')" class="dropdown-item">Location</div>
+                                <div @click="sortField('availability')" class="dropdown-item">Availability</div>
+                            </div>
+
+                            <div class="sorting-buttons">
+                                <button @click="sortCriterion.order = 'desc'; sortProducts()">&darr;</button>
                             </div>
                         </div>
                     </div>
@@ -126,7 +136,7 @@
                     <label for="cardNumber">Card Number:</label>
                     <input id="cardNumber" v-model="order.cardNumber" type="number" placeholder="Enter your card number" required>
                 </div>
-                <button v-on:click="submitForm" class="place-order">Place Order</button>
+                <button v-if="isOrderFormComplete" v-on:click="submitForm" class="place-order">Place Order</button>
             </div>
         </main>
     </div>
