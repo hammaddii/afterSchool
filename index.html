@@ -17,7 +17,6 @@
             <a href="/" class="site-title">
                 <h1>{{ sitename }}</h1>
             </a>
-            <!-- Only show the checkout button if there are items in the cart -->
             <button v-if="totalCartItemCount > 0" v-on:click="showCheckout">
                 {{ totalCartItemCount }} <span class="fas fa-cart-plus"></span> Checkout
             </button>
@@ -45,7 +44,6 @@
                                 <div @click="sortField('location')" class="dropdown-item">Location</div>
                                 <div @click="sortField('availability')" class="dropdown-item">Availability</div>
                             </div>
-
                             <div class="sorting-buttons">
                                 <button @click="sortCriterion.order = 'desc'; sortProducts()">&darr;</button>
                             </div>

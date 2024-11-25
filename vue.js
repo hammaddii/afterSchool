@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         methods: {
             fetchProducts() {
-                fetch('http://localhost:3000/collection/clubs')
+                fetch('https://afterschoolbackend-bldm.onrender.com/collection/clubs')
                     .then(response => response.json())
                     .then(data => {
                         this.products = data;
