@@ -66,25 +66,38 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Submit order form
             submitForm() {
-                if (this.order.firstName && this.order.lastName && this.order.address && this.order.paymentMethod) {
-                    alert("Order Submitted!");
-                    this.cart = [];
-                    this.order = {
-                        firstName: '',
-                        lastName: '',
-                        address: '',
-                        contact: '',
-                        email: '',
-                        paymentMethod: 'Cash',
-                        cardNumber: '',
-                    };
-                    this.showProduct = true;
-                } else {
-                    alert("Please fill in all fields");
+                // Check if required fields are filled
+                if (!this.order.firstName || !this.order.lastName || !this.order.address || !this.order.contact || !this.order.email || !this.order.paymentMethod) {
+                    alert("Please fill in all required fields.");
+                    return;
                 }
+                if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
+                    alert("Please enter your card details.");
+                    return;
+                }
+        
+                alert("Order Submitted!");
+                this.cart = [];
+                this.order = {
+                    firstName: '',
+                    lastName: '',
+                    address: '',
+                    contact: '',
+                    email: '',
+                    paymentMethod: 'Cash',
+                    cardNumber: '',
+                };
+                this.showProduct = true;
+            },
+            validateCardNumber() {
+                const cardNumber = this.order.cardNumber;
+                if (cardNumber && !/^\d{16}$/.test(cardNumber)) {
+                    alert("Please enter a valid 16-digit card number.");
+                    return false;
+                }
+                return true;
             },
 
-            // Check if a product can be added to cart
             canAddToCart(product) {
                 return product.availableSpace > 0;
             },
