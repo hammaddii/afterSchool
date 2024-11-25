@@ -34,7 +34,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         console.error("Error fetching products:", error);
                     });
             },
-
+            goHome() {
+                this.cart = [];
+                this.showProduct = true;
+            },
             // Add to cart functionality
             addToCart(product) {
                 const existingItem = this.cart.find(item => item.id === product.id);
@@ -117,7 +120,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
 
                 if (this.cart.length === 0) {
-                    window.location.href = '/';
+                    this.showProduct = true;
                 }
             },
 
@@ -138,7 +141,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Sort products based on the selected criterion
             sortProducts() {
-                // Ensure the list is sorted based on the field and order
                 if (this.sortCriterion.field === 'subject') {
                     this.products.sort((a, b) => a.subject.localeCompare(b.subject));
                 } else if (this.sortCriterion.field === 'price') {
@@ -151,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.products.sort((a, b) => a.id - b.id);
                 }
 
-                // Apply the order (ascending or descending)
+                // Apply the order (ascending)
                 if (this.sortCriterion.order === 'desc') {
                     this.products.reverse(); // Reverse for descending order
                 }
@@ -167,7 +169,6 @@ document.addEventListener('DOMContentLoaded', function() {
             filteredProducts() {
                 let filtered = this.products.filter(product => {
                     const query = this.searchQuery.toLowerCase();
-
                     const matchesSubject = product.subject.toLowerCase().includes(query);
                     const matchesLocation = product.location.toLowerCase().includes(query);
                     const matchesAvailableSpace = product.availableSpace.toString().includes(query);
@@ -175,7 +176,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
                     return matchesSubject || matchesLocation || matchesAvailableSpace || matchesPrice;
                 });
-
                 return filtered;
             },
 

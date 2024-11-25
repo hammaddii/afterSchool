@@ -14,7 +14,7 @@
 <body>
     <div id="app">
         <header>
-            <a href="/" class="site-title">
+            <a href="#" @click="goHome" class="site-title">
                 <h1>{{ sitename }}</h1>
             </a>
             <button v-if="totalCartItemCount > 0" v-on:click="showCheckout">
