@@ -66,28 +66,54 @@ document.addEventListener('DOMContentLoaded', function() {
 
             // Submit order form
             submitForm() {
-                // Check if required fields are filled
-                if (!this.order.firstName || !this.order.lastName || !this.order.address || !this.order.contact || !this.order.email || !this.order.paymentMethod) {
+                if (!this.order.firstName || !this.order.contact) {
                     alert("Please fill in all required fields.");
                     return;
                 }
+            
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
                     return;
                 }
-        
-                alert("Order Submitted!");
-                this.cart = [];
-                this.order = {
-                    firstName: '',
-                    lastName: '',
-                    address: '',
-                    contact: '',
-                    email: '',
-                    paymentMethod: 'Cash',
-                    cardNumber: '',
+            
+                // Make order data
+                const orderData = {
+                    name: `${this.order.firstName} ${this.order.lastName}`,
+                    phoneNumber: this.order.contact,
+                    clubs: this.cart.map(item => ({
+                        clubId: item.id,
+                        spaces: item.count,
+                    })),
                 };
-                this.showProduct = true;
+            
+                // Send the order to the server
+                fetch('https://afterschoolbackend-bldm.onrender.com/collection/orders', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(orderData),
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        alert("Order submitted successfully!");
+                        console.log("Order response:", data);
+                        this.cart = [];
+                        this.order = {
+                            firstName: '',
+                            lastName: '',
+                            address: '',
+                            contact: '',
+                            email: '',
+                            paymentMethod: 'Cash',
+                            cardNumber: '',
+                        };
+                        this.showProduct = true;
+                    })
+                    .catch(error => {
+                        console.error("Error submitting order:", error);
+                        alert("There was an error submitting your order. Please try again.");
+                    });
             },
             validateCardNumber() {
                 const cardNumber = this.order.cardNumber;
