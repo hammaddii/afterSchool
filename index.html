@@ -134,7 +134,7 @@
                     <label for="cardNumber">Card Number:</label>
                     <input id="cardNumber" v-model="order.cardNumber" type="number" placeholder="Enter your card number" required>
                 </div>
-                <button v-if="isOrderFormComplete" :disabled="!isOrderFormComplete" v-on:click="submitForm" class="place-order">Place Order</button>
+                <button v-show="isOrderFormComplete" :disabled="!isOrderFormComplete" v-on:click="submitForm" class="place-order">Place Order</button>
             </div>
         </main>
     </div>
