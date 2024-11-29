@@ -1,44 +1,49 @@
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     new Vue({
-        el: '#app',
+        el: '#app', // Mount Vue instance to the DOM element with id 'app'
         data: {
+            // Define application data
             sitename: 'After School Club',
-            showProduct: true,
-            products: [],
-            cart: [],
+            showProduct: true, // Toggle between product view and checkout view
+            products: [], // Store fetched product list
+            cart: [], // Shopping cart array
             order: {
                 firstName: '',
                 lastName: '',
                 address: '',
                 contact: '',
                 email: '',
-                paymentMethod: 'Cash',
-                cardNumber: '',
+                paymentMethod: 'Cash', // Default payment method
+                cardNumber: '', // For card payment method
             },
             sortCriterion: {
-                field: 'default', // Default sorting by 'default'
-                order: 'asc' // Always ascending by default
+                field: 'default', // Default sorting criterion
+                order: 'asc', // Default sorting order
             },
-            searchQuery: '',
-            isDropdownVisible: false,
+            searchQuery: '', // Search input query
+            isDropdownVisible: false, // Toggle dropdown menu visibility
         },
         methods: {
+            // Fetch products from the API and initialize sorting
             fetchProducts() {
                 fetch('https://afterschoolbackend-bldm.onrender.com/collection/clubs')
                     .then(response => response.json())
                     .then(data => {
                         this.products = data;
-                        this.sortProducts();
+                        this.sortProducts(); // Sort products after fetching
                     })
                     .catch(error => {
                         console.error("Error fetching products:", error);
                     });
             },
+
+            // Reset the cart and return to the product view
             goHome() {
                 this.cart = [];
                 this.showProduct = true;
             },
-            // Add to cart functionality
+
+            // Add a product to the cart or increment its count
             addToCart(product) {
                 const existingItem = this.cart.find(item => item.id === product.id);
                 if (existingItem) {
@@ -52,10 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         image: product.image,
                     });
                 }
-                product.availableSpace -= 1;
+                product.availableSpace -= 1; // Reduce availability
             },
 
-            // Show checkout view
+            // Switch between product and checkout views
             showCheckout() {
                 if (this.cart.length === 0) {
                     alert("Your cart is empty. Please add items before checking out.");
@@ -64,19 +69,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.showProduct = !this.showProduct;
             },
 
-            // Submit order form
+            // Submit the order and reset the cart
             submitForm() {
                 if (!this.order.firstName || !this.order.contact) {
                     alert("Please fill in all required fields.");
                     return;
                 }
-            
+
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
                     return;
                 }
-            
-                // Make order data
+
                 const orderData = {
                     name: `${this.order.firstName} ${this.order.lastName}`,
                     phoneNumber: this.order.contact,
@@ -85,8 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         spaces: item.count,
                     })),
                 };
-            
-                // Send the order to the server
+
                 fetch('https://afterschoolbackend-bldm.onrender.com/collection/orders', {
                     method: 'POST',
                     headers: {
@@ -97,7 +100,6 @@ document.addEventListener('DOMContentLoaded', function() {
                     .then(response => response.json())
                     .then(data => {
                         alert("Order submitted successfully!");
-                        console.log("Order response:", data);
                         this.cart = [];
                         this.order = {
                             firstName: '',
@@ -115,6 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         alert("There was an error submitting your order. Please try again.");
                     });
             },
+
+            // Validate card number
             validateCardNumber() {
                 const cardNumber = this.order.cardNumber;
                 if (cardNumber && !/^\d{16}$/.test(cardNumber)) {
@@ -124,6 +128,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 return true;
             },
 
+            // Check if a product can be added to the cart
             canAddToCart(product) {
                 return product.availableSpace > 0;
             },
@@ -150,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             },
 
-            // Remove an item from the cart
+            // Remove an item from the cart and restore availability
             removeFromCart(item) {
                 this.cart = this.cart.filter(cartItem => cartItem.id !== item.id);
                 const product = this.products.find(p => p.id === item.id);
@@ -163,22 +168,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             },
 
-            // Validate contact number input
+            // Validate contact input to allow only numbers and +
             validateContact() {
                 const contactInput = this.order.contact;
                 this.order.contact = contactInput.replace(/[^0-9+]/g, '');
             },
 
-            // Handle sorting option change (dropdown)
+            // Set sorting field and reset order to ascending
             sortField(criterion) {
                 this.sortCriterion.field = criterion;
                 this.sortCriterion.order = 'asc';
                 this.sortProducts();
-
-                this.isDropdownVisible = false;
+                this.isDropdownVisible = false; // Hide dropdown
             },
 
-            // Sort products based on the selected criterion
+            // Sort products based on field and order
             sortProducts() {
                 if (this.sortCriterion.field === 'subject') {
                     this.products.sort((a, b) => a.subject.localeCompare(b.subject));
@@ -192,9 +196,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     this.products.sort((a, b) => a.id - b.id);
                 }
 
-                // Apply the order (ascending)
                 if (this.sortCriterion.order === 'desc') {
-                    this.products.reverse(); // Reverse for descending order
+                    this.products.reverse();
                 }
             },
 
@@ -203,36 +206,36 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.isDropdownVisible = !this.isDropdownVisible;
             }
         },
-
         computed: {
+            // Filter products based on search query
             filteredProducts() {
-                let filtered = this.products.filter(product => {
+                return this.products.filter(product => {
                     const query = this.searchQuery.toLowerCase();
-                    const matchesSubject = product.subject.toLowerCase().includes(query);
-                    const matchesLocation = product.location.toLowerCase().includes(query);
-                    const matchesAvailableSpace = product.availableSpace.toString().includes(query);
-                    const matchesPrice = product.price.toString().includes(query);
-
-                    return matchesSubject || matchesLocation || matchesAvailableSpace || matchesPrice;
+                    return (
+                        product.subject.toLowerCase().includes(query) || product.location.toLowerCase().includes(query) || product.availableSpace.toString().includes(query) ||product.price.toString().includes(query)
+                    );
                 });
-                return filtered;
             },
 
+            // Calculate total cart value
             totalCartValue() {
                 return this.cart.reduce((total, item) => total + item.price * item.count, 0);
             },
 
+            // Count total items in the cart
             totalCartItemCount() {
                 return this.cart.reduce((total, item) => total + item.count, 0);
             },
 
+            // Check if order form is complete
             isOrderFormComplete() {
-                return this.order.firstName && this.order.lastName && this.order.address && this.order.contact && this.order.email && this.order.paymentMethod;
-            },
+                return (
+                    this.order.firstName && this.order.lastName && this.order.address && this.order.contact && this.order.email && this.order.paymentMethod
+                );
+            }
         },
-
         mounted() {
-            this.fetchProducts();
+            this.fetchProducts(); // Fetch product data on component mount
         }
     });
 });

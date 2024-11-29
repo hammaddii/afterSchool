@@ -7,7 +7,6 @@ body {
     background-color: #EEEEEE;
 }
 
-
 /* Header Styles */
 
 header {
@@ -259,6 +258,9 @@ input[type="number"]::-webkit-outer-spin-button {
     flex-basis: 100%;
 }
 
+
+/* Sort & Filter Styles */
+
 .sort-container {
     display: flex;
     justify-content: space-between;
@@ -333,6 +335,9 @@ input[type="number"]::-webkit-outer-spin-button {
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
 }
 
+
+/* Search Bar Styles */
+
 .search-bar {
     margin-top: 20px;
     margin-bottom: 20px;
@@ -349,6 +354,9 @@ input[type="number"]::-webkit-outer-spin-button {
     font-size: 16px;
     margin-right: 53px;
 }
+
+
+/* Card Input Styles */
 
 .card-input {
     margin-top: 15px;
