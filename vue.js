@@ -1,30 +1,32 @@
 document.addEventListener('DOMContentLoaded', function () {
     new Vue({
-        el: '#app', // Mount Vue instance to the DOM element with id 'app'
+        el: '#app',
         data: {
             sitename: 'After School Club',
-            showProduct: true, // Toggle between product view and checkout view
-            products: [], // Store fetched product list
-            cart: [], // Shopping cart array
+            showProduct: true,
+            products: [],
+            cart: [],
+            searchQuery: '',
             order: {
                 firstName: '',
                 lastName: '',
                 address: '',
                 contact: '',
                 email: '',
-                paymentMethod: 'Cash', // Default payment method
-                cardNumber: '', // For card payment method
+                paymentMethod: 'Cash',
+                cardNumber: '',
             },
             sortCriterion: {
-                field: 'default', // Default sorting criterion
-                order: 'asc', // Default sorting order
+                field: 'default',
+                order: 'asc',
             },
-            isDropdownVisible: false, // Toggle dropdown menu visibility
+            isDropdownVisible: false,
         },
         methods: {
             // Fetch products from the API and initialize sorting
-            fetchProducts() {
-                fetch('https://afterschoolbackend-bldm.onrender.com/collection/clubs')
+            fetchProducts(query = '') {
+                const url = `https://afterschoolbackend-bldm.onrender.com/collection/clubs?search=${encodeURIComponent(query)}`;
+                fetch(url)
                     .then(response => response.json())
                     .then(data => {
                         this.products = data;
@@ -35,13 +37,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
             },
 
-            // Reset the cart and return to the product view
             goHome() {
                 this.cart = [];
                 this.showProduct = true;
             },
 
-            // Add a product to the cart or increment its count
             addToCart(product) {
                 const existingItem = this.cart.find(item => item.id === product.id);
                 if (existingItem) {
@@ -55,10 +55,9 @@ document.addEventListener('DOMContentLoaded', function () {
                         image: product.image,
                     });
                 }
-                product.availableSpace -= 1; // Reduce availability
+                product.availableSpace -= 1;
             },
 
-            // Switch between product and checkout views
             showCheckout() {
                 if (this.cart.length === 0) {
                     alert("Your cart is empty. Please add items before checking out.");
@@ -67,7 +66,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.showProduct = !this.showProduct;
             },
 
-            // Submit the order and reset the cart
             submitForm() {
                 if (!this.order.firstName || !this.order.contact) {
                     alert("Please fill in all required fields.");
@@ -116,22 +114,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     });
             },
 
-            // Validate card number
-            validateCardNumber() {
-                const cardNumber = this.order.cardNumber;
-                if (cardNumber && !/^\d{16}$/.test(cardNumber)) {
-                    alert("Please enter a valid 16-digit card number.");
-                    return false;
-                }
-                return true;
-            },
-
-            // Check if a product can be added to the cart
             canAddToCart(product) {
                 return product.availableSpace > 0;
             },
 
-            // Increase quantity of a product in the cart
             increaseQuantity(item) {
                 const product = this.products.find(p => p.id === item.id);
                 if (product && product.availableSpace > 0) {
@@ -140,7 +126,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
 
-            // Decrease quantity of a product in the cart
             decreaseQuantity(item) {
                 if (item.count > 1) {
                     item.count -= 1;
@@ -153,7 +138,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
 
-            // Remove an item from the cart and restore availability
             removeFromCart(item) {
                 this.cart = this.cart.filter(cartItem => cartItem.id !== item.id);
                 const product = this.products.find(p => p.id === item.id);
@@ -166,21 +150,18 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
 
-            // Validate contact input to allow only numbers and +
             validateContact() {
                 const contactInput = this.order.contact;
                 this.order.contact = contactInput.replace(/[^0-9+]/g, '');
             },
 
-            // Set sorting field and reset order to ascending
             sortField(criterion) {
                 this.sortCriterion.field = criterion;
                 this.sortCriterion.order = 'asc';
                 this.sortProducts();
-                this.isDropdownVisible = false; // Hide dropdown
+                this.isDropdownVisible = false;
             },
 
-            // Sort products based on field and order
             sortProducts() {
                 if (this.sortCriterion.field === 'subject') {
                     this.products.sort((a, b) => a.subject.localeCompare(b.subject));
@@ -199,23 +180,24 @@ document.addEventListener('DOMContentLoaded', function () {
                 }
             },
 
-            // Toggle sorting dropdown visibility
             toggleDropdown() {
                 this.isDropdownVisible = !this.isDropdownVisible;
-            }
+            },
+
+            // Call the fetchProducts method whenever search query changes
+            searchClubs() {
+                this.fetchProducts(this.searchQuery); // Pass search query to backend API
+            },
         },
         computed: {
-            // Calculate total cart value
             totalCartValue() {
                 return this.cart.reduce((total, item) => total + item.price * item.count, 0);
             },
 
-            // Count total items in the cart
             totalCartItemCount() {
                 return this.cart.reduce((total, item) => total + item.count, 0);
             },
 
-            // Check if order form is complete
             isOrderFormComplete() {
                 return (
                     this.order.firstName && this.order.lastName && this.order.address && this.order.contact && this.order.email && this.order.paymentMethod
@@ -223,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         },
         mounted() {
-            this.fetchProducts(); // Fetch product data on component mount
+            this.fetchProducts(); // Fetch all products initially
         }
     });
 });
