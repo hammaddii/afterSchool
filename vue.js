@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', function () {
         methods: {
             // Fetch products from the API and initialize sorting
             fetchProducts(query = '') {
-                const url = `https://afterschoolbackend-bldm.onrender.com/collection/clubs?search=${encodeURIComponent(query)}`;
+                const url = `https://afterschoolbackend-bldm.onrender.com/collection/clubs/search?query=${encodeURIComponent(query)}`;
                 fetch(url)
                     .then(response => response.json())
                     .then(data => {
@@ -35,6 +35,10 @@ document.addEventListener('DOMContentLoaded', function () {
                     .catch(error => {
                         console.error("Error fetching products:", error);
                     });
+            },
+
+            searchClubs() {
+                this.fetchProducts(this.searchQuery);
             },
 
             goHome() {
