@@ -38,7 +38,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
 
             searchClubs() {
-                this.fetchProducts(this.searchQuery);
+                this.fetchProducts(this.searchQuery); 
             },
 
             goHome() {
