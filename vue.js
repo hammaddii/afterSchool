@@ -2,7 +2,6 @@ document.addEventListener('DOMContentLoaded', function () {
     new Vue({
         el: '#app', // Mount Vue instance to the DOM element with id 'app'
         data: {
-            // Define application data
             sitename: 'After School Club',
             showProduct: true, // Toggle between product view and checkout view
             products: [], // Store fetched product list
@@ -20,7 +19,6 @@ document.addEventListener('DOMContentLoaded', function () {
                 field: 'default', // Default sorting criterion
                 order: 'asc', // Default sorting order
             },
-            searchQuery: '', // Search input query
             isDropdownVisible: false, // Toggle dropdown menu visibility
         },
         methods: {
@@ -207,16 +205,6 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         },
         computed: {
-            // Filter products based on search query
-            filteredProducts() {
-                return this.products.filter(product => {
-                    const query = this.searchQuery.toLowerCase();
-                    return (
-                        product.subject.toLowerCase().includes(query) || product.location.toLowerCase().includes(query) || product.availableSpace.toString().includes(query) ||product.price.toString().includes(query)
-                    );
-                });
-            },
-
             // Calculate total cart value
             totalCartValue() {
                 return this.cart.reduce((total, item) => total + item.price * item.count, 0);
