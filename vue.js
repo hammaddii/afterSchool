@@ -237,14 +237,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Check if the order form is complete
             isOrderFormComplete() {
-                // Check if all required fields are filled
-                const isComplete = this.order.firstName && this.order.lastName && this.order.contact && this.order.email && this.order.paymentMethod && (this.order.paymentMethod === 'Cash' || this.order.cardNumber); 
-        
-                if (!isComplete) {
-                    alert("Please fill in all required fields.");
-                }
-                return isComplete;
-            }
+                return (this.order.firstName && this.order.lastName && this.order.address && this.order.contact && this.order.email && this.order.paymentMethod
+                );
+            },
         },
         mounted() {
             this.fetchProducts(); // Fetch all products initially on page load
