@@ -78,36 +78,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate and submit the order form
             submitForm() {
-                // Check if any required field is empty
-                if (!this.order.firstName.trim() || !this.order.lastName.trim() || !this.order.address.trim() || !this.order.contact.trim() || !this.order.email.trim()) {
+                // Ensure mandatory fields are filled
+                if (!this.order.firstName || !this.order.contact) {
                     alert("Please fill in all required fields.");
                     return;
                 }
-            
-                // Ensure firstName and lastName contain only letters and spaces
-                const nameRegex = /^[a-zA-Z\s]+$/;
+
+                const nameRegex = /^[a-zA-Z\s]+$/; // Regex to validate names
+                // Validate names using the regex
                 if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
                     alert("First and Last Name must contain only letters.");
                     return;
                 }
-            
-                // If payment method is 'Card', ensure card details are entered
-                if (this.order.paymentMethod === 'Card' && !this.order.cardNumber.trim()) {
+
+                // Ensure card details are provided for card payments
+                if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
                     return;
                 }
-            
-                // Prepare order data
+
+                // Prepare the order data to send to the backend
                 const orderData = {
-                    name: `${this.order.firstName.trim()} ${this.order.lastName.trim()}`,
-                    phoneNumber: this.order.contact.trim(),
+                    name: `${this.order.firstName} ${this.order.lastName}`, // Combine first and last name
+                    phoneNumber: this.order.contact, // User's contact number
                     clubs: this.cart.map(item => ({
                         clubId: item.id,
-                        spaces: item.count,
+                        spaces: item.count, // Number of spaces booked
                     })),
                 };
-            
-                // Send the order to the server
+
+                // Submit the order to the backend
                 fetch('https://afterschoolbackend-bldm.onrender.com/collection/orders', {
                     method: 'POST',
                     headers: {
@@ -115,25 +115,26 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: JSON.stringify(orderData),
                 })
-                .then(response => response.json())
-                .then(() => {
-                    alert("Order submitted successfully!");
-                    this.cart = [];
-                    this.order = {
-                        firstName: '',
-                        lastName: '',
-                        address: '',
-                        contact: '',
-                        email: '',
-                        paymentMethod: 'Cash',
-                        cardNumber: '',
-                    };
-                    this.showProduct = true;
-                })
-                .catch(error => {
-                    console.error("Error submitting order:", error);
-                    alert("There was an error submitting your order. Please try again.");
-                });
+                    .then(response => response.json())
+                    .then(data => {
+                        alert("Order submitted successfully!"); // Notify user on success
+                        // Reset cart and order details
+                        this.cart = [];
+                        this.order = {
+                            firstName: '',
+                            lastName: '',
+                            address: '',
+                            contact: '',
+                            email: '',
+                            paymentMethod: 'Cash',
+                            cardNumber: '',
+                        };
+                        this.showProduct = true;
+                    })
+                    .catch(error => {
+                        console.error("Error submitting order:", error); // Log errors
+                        alert("There was an error submitting your order. Please try again.");
+                    });
             },
 
             // Check if a product can be added to the cart
@@ -236,8 +237,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Check if the order form is complete
             isOrderFormComplete() {
-                return this.order.firstName && this.order.lastName && this.order.contact && this.order.email;
-                
+                return (this.order.firstName && this.order.lastName && this.order.address && this.order.contact && this.order.email && this.order.paymentMethod
+                );
             },
         },
         mounted() {
