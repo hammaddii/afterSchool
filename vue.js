@@ -78,26 +78,29 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate and submit the order form
             submitForm() {
+                console.log("Form submission triggered");
+            
                 // Check if required fields are filled
                 if (!this.order.firstName || !this.order.lastName || !this.order.contact || !this.order.email) {
+                    console.log("Form is incomplete");
                     alert("Please fill in all required fields.");
                     return;
                 }
             
-                // Validate name fields (first name and last name)
                 const nameRegex = /^[a-zA-Z\s]+$/;
                 if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
+                    console.log("Name fields are invalid");
                     alert("First and Last Name must contain only letters.");
                     return;
                 }
             
-                // Check if payment method is 'Card' and card number is provided
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
+                    console.log("Card details are missing");
                     alert("Please enter your card details.");
                     return;
                 }
             
-                // Proceed to submit the order if everything is valid
+                console.log("Form is valid, submitting order...");
                 const orderData = {
                     name: `${this.order.firstName} ${this.order.lastName}`,
                     phoneNumber: this.order.contact,
@@ -107,7 +110,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     })),
                 };
             
-                // Submit the order to the backend
                 fetch('https://afterschoolbackend-bldm.onrender.com/collection/orders', {
                     method: 'POST',
                     headers: {
@@ -118,8 +120,8 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     alert("Order submitted successfully!");
-                    this.cart = []; // Clear the cart after submission
-                    this.order = { // Reset the order form
+                    this.cart = [];
+                    this.order = {
                         firstName: '',
                         lastName: '',
                         address: '',
@@ -128,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         paymentMethod: 'Cash',
                         cardNumber: '',
                     };
-                    this.showProduct = true; // Go back to the product page
+                    this.showProduct = true;
                 })
                 .catch(error => {
                     console.error("Error submitting order:", error);
