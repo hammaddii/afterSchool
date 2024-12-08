@@ -223,8 +223,7 @@ document.addEventListener('DOMContentLoaded', function () {
             },
 
             isOrderFormComplete() {
-                return (this.order.firstName.trim() && this.order.lastName.trim() && this.order.address.trim() && this.order.contact.trim() && this.order.email.trim() && this.order.paymentMethod && (this.order.paymentMethod !== 'Card' || this.order.cardNumber.trim())
-                );
+                return this.order.firstName.trim() && this.order.lastName.trim() && this.order.address.trim() && this.order.contact.trim() && this.order.email.trim() && this.order.paymentMethod && (this.order.paymentMethod !== 'Card' || this.order.cardNumber.trim()) && this.order.firstName.trim() !== '' && this.order.lastName.trim() !== '' && this.order.address.trim() !== '' && this.order.contact.trim() !== '' && this.order.email.trim() !== '';
             }
         },
         mounted() {
