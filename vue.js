@@ -81,6 +81,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
+                if (!this.order.contact) {
+                    alert("Please fill in all required fields.");
+                    return;
+                }
+
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
                     return;
