@@ -78,26 +78,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate and submit the order form
             submitForm() {
-                // Validate that none of the required fields are empty
+                // Check if any required field is empty
                 if (!this.order.firstName || !this.order.lastName || !this.order.contact || !this.order.email) {
                     alert("Please fill in all required fields.");
-                    return; // Stop further execution if fields are empty
+                    return; // Stop if any required field is empty
                 }
             
-                // Validate that the first and last name only contain letters
+                // Validate that first and last names contain only letters and spaces
                 const nameRegex = /^[a-zA-Z\s]+$/;
                 if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
                     alert("First and Last Name must contain only letters.");
                     return;
                 }
             
-                // If the payment method is 'Card', check if the card number is entered
+                // If payment method is 'Card', check if card number is provided
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
                     return;
                 }
             
-                // If everything passes, proceed to submit the order
+                // Proceed with order submission if all validations pass
                 const orderData = {
                     name: `${this.order.firstName} ${this.order.lastName}`,
                     phoneNumber: this.order.contact,
