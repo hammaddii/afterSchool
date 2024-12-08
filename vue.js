@@ -76,6 +76,11 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
+                if (!this.validateName(this.order.firstName) || !this.validateName(this.order.lastName)) {
+                    alert("Name must contain only letters.");
+                    return;
+                }
+
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
                     return;
@@ -158,7 +163,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 const contactInput = this.order.contact;
                 this.order.contact = contactInput.replace(/[^0-9+]/g, '');
             },
-            
+
             validateName(name) {
                 const nameRegex = /^[a-zA-Z\s]+$/; // Allow letters and spaces
                 return nameRegex.test(name);
