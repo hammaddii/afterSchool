@@ -79,22 +79,22 @@ document.addEventListener('DOMContentLoaded', function () {
             // Validate and submit the order form
             submitForm() {
                 // Check if required fields are filled
-                if (!this.order.firstName || !this.order.lastName || !this.order.contact || !this.order.email) {
+                if (!this.order.firstName || !this.order.lastName || !this.order.contact || !this.order.email || !this.order.address) {
                     alert("Please fill in all required fields.");
-                    return;
+                    return; // Prevent further form submission
                 }
             
                 // Validate name fields (first name and last name)
                 const nameRegex = /^[a-zA-Z\s]+$/;
                 if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
                     alert("First and Last Name must contain only letters.");
-                    return;
+                    return; // Prevent further form submission
                 }
             
                 // Check if payment method is 'Card' and card number is provided
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
-                    return;
+                    return; // Prevent further form submission
                 }
             
                 // Proceed to submit the order if everything is valid
