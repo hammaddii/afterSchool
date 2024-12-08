@@ -78,29 +78,22 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate and submit the order form
             submitForm() {
-                console.log("Form submission triggered");
-            
-                // Check if required fields are filled
                 if (!this.order.firstName || !this.order.lastName || !this.order.contact || !this.order.email) {
-                    console.log("Form is incomplete");
                     alert("Please fill in all required fields.");
                     return;
                 }
             
                 const nameRegex = /^[a-zA-Z\s]+$/;
                 if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
-                    console.log("Name fields are invalid");
                     alert("First and Last Name must contain only letters.");
                     return;
                 }
             
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
-                    console.log("Card details are missing");
                     alert("Please enter your card details.");
                     return;
                 }
             
-                console.log("Form is valid, submitting order...");
                 const orderData = {
                     name: `${this.order.firstName} ${this.order.lastName}`,
                     phoneNumber: this.order.contact,
