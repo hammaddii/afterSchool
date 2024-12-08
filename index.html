@@ -109,11 +109,11 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="firstName">First Name:</label>
-                            <input id="firstName" v-model="order.firstName" type="text" required>
+                            <input id="firstName" v-model="order.firstName" type="text" @input="validateName('firstName')" required>
                         </div>
                         <div class="form-group">
                             <label for="lastName">Last Name:</label>
-                            <input id="lastName" v-model="order.lastName" type="text" required>
+                            <input id="lastName" v-model="order.lastName" type="text" @input="validateName('lastName')" required>
                         </div>
                         <div class="form-group">
                             <label for="address">Address:</label>
