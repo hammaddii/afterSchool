@@ -234,17 +234,15 @@ document.addEventListener('DOMContentLoaded', function () {
             },
 
             // Check if the order form is complete
-            computed: {
-                isOrderFormComplete() {
-                    return (
-                        this.order.firstName &&
-                        this.order.lastName &&
-                        this.order.address &&
-                        this.order.contact &&
-                        this.order.email &&
-                        this.order.paymentMethod
-                    );
-                },
+            isOrderFormComplete() {
+                return (
+                    this.order.firstName &&
+                    this.order.lastName &&
+                    this.order.address &&
+                    this.order.contact &&
+                    this.order.email &&
+                    this.order.paymentMethod
+                );
             },
         },
         mounted() {
