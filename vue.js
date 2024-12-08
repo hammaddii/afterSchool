@@ -158,6 +158,11 @@ document.addEventListener('DOMContentLoaded', function () {
                 const contactInput = this.order.contact;
                 this.order.contact = contactInput.replace(/[^0-9+]/g, '');
             },
+            
+            validateName(name) {
+                const nameRegex = /^[a-zA-Z\s]+$/; // Allow letters and spaces
+                return nameRegex.test(name);
+            },
 
             sortField(criterion) {
                 this.sortCriterion.field = criterion;
