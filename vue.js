@@ -78,22 +78,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate and submit the order form
             submitForm() {
+                // Ensure all required fields are filled
                 if (!this.order.firstName || !this.order.lastName || !this.order.contact || !this.order.email) {
                     alert("Please fill in all required fields.");
                     return;
                 }
             
+                // Validate name to ensure they only contain letters
                 const nameRegex = /^[a-zA-Z\s]+$/;
                 if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
                     alert("First and Last Name must contain only letters.");
                     return;
                 }
             
+                // Check if card details are required (for card payment method)
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
                     return;
                 }
             
+                // If validation passes, proceed to submit the order
                 const orderData = {
                     name: `${this.order.firstName} ${this.order.lastName}`,
                     phoneNumber: this.order.contact,
@@ -103,6 +107,7 @@ document.addEventListener('DOMContentLoaded', function () {
                     })),
                 };
             
+                // Submit the order
                 fetch('https://afterschoolbackend-bldm.onrender.com/collection/orders', {
                     method: 'POST',
                     headers: {
