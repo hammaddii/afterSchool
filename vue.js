@@ -78,35 +78,37 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate and submit the order form
             submitForm() {
-                // Ensure all required fields are filled
-                if (!this.order.firstName || !this.order.lastName || !this.order.contact || !this.order.email) {
-                    alert("Please fill in all required fields.");
-                    return;
+                // Check if required fields are empty
+                const { firstName, lastName, contact, email } = this.order;
+                if (!firstName.trim() || !lastName.trim() || !contact.trim() || !email.trim()) {
+                    alert("Please fill in all required fields."); // Display alert
+                    return; // Stop execution if fields are empty
                 }
             
-                // Validate that the first and last name contain only letters and spaces
+                // Ensure names contain only letters
                 const nameRegex = /^[a-zA-Z\s]+$/;
-                if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
-                    alert("First and Last Name must contain only letters.");
-                    return;
+                if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+                    alert("First and Last Name must contain only letters."); // Display alert
+                    return; // Stop execution if names are invalid
                 }
             
-                // If the payment method is "Card", ensure the card number is filled
-                if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
-                    alert("Please enter your card details.");
-                    return;
+                // Ensure card details are entered if payment method is "Card"
+                if (this.order.paymentMethod === 'Card' && !this.order.cardNumber.trim()) {
+                    alert("Please enter your card details."); // Display alert
+                    return; // Stop execution if card details are missing
                 }
             
-                // If all checks pass, proceed with form submission
+                // If all validations pass, prepare order data
                 const orderData = {
-                    name: `${this.order.firstName} ${this.order.lastName}`,
-                    phoneNumber: this.order.contact,
+                    name: `${firstName} ${lastName}`,
+                    phoneNumber: contact,
                     clubs: this.cart.map(item => ({
                         clubId: item.id,
                         spaces: item.count,
                     })),
                 };
             
+                // Send order data to backend
                 fetch('https://afterschoolbackend-bldm.onrender.com/collection/orders', {
                     method: 'POST',
                     headers: {
@@ -116,9 +118,9 @@ document.addEventListener('DOMContentLoaded', function () {
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert("Order submitted successfully!");
-                    this.cart = [];
-                    this.order = {
+                    alert("Order submitted successfully!"); // Display alert on success
+                    this.cart = []; // Clear cart
+                    this.order = { // Reset order form
                         firstName: '',
                         lastName: '',
                         address: '',
@@ -127,11 +129,11 @@ document.addEventListener('DOMContentLoaded', function () {
                         paymentMethod: 'Cash',
                         cardNumber: '',
                     };
-                    this.showProduct = true;
+                    this.showProduct = true; // Show product list
                 })
                 .catch(error => {
-                    console.error("Error submitting order:", error);
-                    alert("There was an error submitting your order. Please try again.");
+                    console.error("Error submitting order:", error); // Log error
+                    alert("There was an error submitting your order. Please try again."); // Display alert on error
                 });
             },
 
