@@ -78,26 +78,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate and submit the order form
             submitForm() {
-                // Ensure all required fields are filled
+                // Validate that none of the required fields are empty
                 if (!this.order.firstName || !this.order.lastName || !this.order.contact || !this.order.email) {
                     alert("Please fill in all required fields.");
-                    return;
+                    return; // Stop further execution if fields are empty
                 }
             
-                // Validate name to ensure they only contain letters
+                // Validate that the first and last name only contain letters
                 const nameRegex = /^[a-zA-Z\s]+$/;
                 if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
                     alert("First and Last Name must contain only letters.");
                     return;
                 }
             
-                // Check if card details are required (for card payment method)
+                // If the payment method is 'Card', check if the card number is entered
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
                     return;
                 }
             
-                // If validation passes, proceed to submit the order
+                // If everything passes, proceed to submit the order
                 const orderData = {
                     name: `${this.order.firstName} ${this.order.lastName}`,
                     phoneNumber: this.order.contact,
@@ -107,7 +107,6 @@ document.addEventListener('DOMContentLoaded', function () {
                     })),
                 };
             
-                // Submit the order
                 fetch('https://afterschoolbackend-bldm.onrender.com/collection/orders', {
                     method: 'POST',
                     headers: {
@@ -236,14 +235,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Check if the order form is complete
             isOrderFormComplete() {
-                return (
-                    this.order.firstName &&
-                    this.order.lastName &&
-                    this.order.address &&
-                    this.order.contact &&
-                    this.order.email &&
-                    this.order.paymentMethod
-                );
+                return this.order.firstName && this.order.lastName && this.order.contact && this.order.email;
+                
             },
         },
         mounted() {
