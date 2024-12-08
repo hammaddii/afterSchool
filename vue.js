@@ -78,41 +78,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate and submit the order form
             submitForm() {
-                // Trim values to handle accidental whitespace input
-                const firstName = this.order.firstName?.trim() || '';
-                const lastName = this.order.lastName?.trim() || '';
-                const contact = this.order.contact?.trim() || '';
-                const email = this.order.email?.trim() || '';
-            
-                // Check for missing fields
-                if (!firstName || !lastName || !contact || !email) {
-                    alert("Please fill in all required fields."); // Alert for missing fields
-                    return; // Stop execution
+                // Check if any required field is empty
+                if (!this.order.firstName.trim() || !this.order.lastName.trim() || !this.order.address.trim() || !this.order.contact.trim() || !this.order.email.trim()) {
+                    alert("Please fill in all required fields.");
+                    return;
                 }
             
-                // Validate name fields (letters and spaces only)
+                // Ensure firstName and lastName contain only letters and spaces
                 const nameRegex = /^[a-zA-Z\s]+$/;
-                if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
-                    alert("First and Last Name must contain only letters."); // Alert for invalid names
+                if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
+                    alert("First and Last Name must contain only letters.");
                     return;
                 }
             
-                // Validate payment method and card details if needed
-                if (this.order.paymentMethod === 'Card' && !this.order.cardNumber?.trim()) {
-                    alert("Please enter your card details."); // Alert for missing card details
+                // If payment method is 'Card', ensure card details are entered
+                if (this.order.paymentMethod === 'Card' && !this.order.cardNumber.trim()) {
+                    alert("Please enter your card details.");
                     return;
                 }
             
-                // Proceed to submit the order
+                // Prepare order data
                 const orderData = {
-                    name: `${firstName} ${lastName}`,
-                    phoneNumber: contact,
+                    name: `${this.order.firstName.trim()} ${this.order.lastName.trim()}`,
+                    phoneNumber: this.order.contact.trim(),
                     clubs: this.cart.map(item => ({
                         clubId: item.id,
                         spaces: item.count,
                     })),
                 };
             
+                // Send the order to the server
                 fetch('https://afterschoolbackend-bldm.onrender.com/collection/orders', {
                     method: 'POST',
                     headers: {
@@ -120,25 +115,25 @@ document.addEventListener('DOMContentLoaded', function () {
                     },
                     body: JSON.stringify(orderData),
                 })
-                    .then(response => response.json())
-                    .then(data => {
-                        alert("Order submitted successfully!"); // Success message
-                        this.cart = []; // Clear cart
-                        this.order = { // Reset order object
-                            firstName: '',
-                            lastName: '',
-                            address: '',
-                            contact: '',
-                            email: '',
-                            paymentMethod: 'Cash',
-                            cardNumber: '',
-                        };
-                        this.showProduct = true; // Show product list
-                    })
-                    .catch(error => {
-                        console.error("Error submitting order:", error); // Log error
-                        alert("There was an error submitting your order. Please try again."); // Alert for error
-                    });
+                .then(response => response.json())
+                .then(() => {
+                    alert("Order submitted successfully!");
+                    this.cart = [];
+                    this.order = {
+                        firstName: '',
+                        lastName: '',
+                        address: '',
+                        contact: '',
+                        email: '',
+                        paymentMethod: 'Cash',
+                        cardNumber: '',
+                    };
+                    this.showProduct = true;
+                })
+                .catch(error => {
+                    console.error("Error submitting order:", error);
+                    alert("There was an error submitting your order. Please try again.");
+                });
             },
 
             // Check if a product can be added to the cart
