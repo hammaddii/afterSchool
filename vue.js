@@ -107,19 +107,18 @@ document.addEventListener('DOMContentLoaded', function () {
                     })),
                 };
             
-                // Send the order data to the backend via POST request
                 fetch('https://afterschoolbackend-bldm.onrender.com/collection/orders', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(orderData), // Order data as the request body
+                    body: JSON.stringify(orderData),
                 })
                 .then(response => response.json())
                 .then(data => {
-                    alert("Order submitted successfully!"); // Success message
-                    this.cart = []; // Clear the cart after successful submission
-                    this.order = { // Reset the order form
+                    alert("Order submitted successfully!");
+                    this.cart = []; // Clear the cart after submission
+                    this.order = {
                         firstName: '',
                         lastName: '',
                         address: '',
@@ -128,10 +127,10 @@ document.addEventListener('DOMContentLoaded', function () {
                         paymentMethod: 'Cash',
                         cardNumber: '',
                     };
-                    this.showProduct = true; // Go back to the product list view
+                    this.showProduct = true; // Go back to the product page
                 })
                 .catch(error => {
-                    console.error("Error submitting order:", error); // Error handling for order submission
+                    console.error("Error submitting order:", error);
                     alert("There was an error submitting your order. Please try again.");
                 });
             },
@@ -235,15 +234,18 @@ document.addEventListener('DOMContentLoaded', function () {
             },
 
             // Check if the order form is complete
-            isOrderFormComplete() {
-                // Check if all required fields are filled
-                const isComplete = this.order.firstName && this.order.lastName && this.order.contact && this.order.email && this.order.paymentMethod && (this.order.paymentMethod === 'Cash' || this.order.cardNumber); 
-        
-                if (!isComplete) {
-                    alert("Please fill in all required fields.");
-                }
-                return isComplete;
-            }
+            computed: {
+                isOrderFormComplete() {
+                    return (
+                        this.order.firstName &&
+                        this.order.lastName &&
+                        this.order.address &&
+                        this.order.contact &&
+                        this.order.email &&
+                        this.order.paymentMethod
+                    );
+                },
+            },
         },
         mounted() {
             this.fetchProducts(); // Fetch all products initially on page load
