@@ -78,26 +78,26 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Validate and submit the order form
             submitForm() {
-                // Check if required fields are filled
+                // Ensure all required fields are filled
                 if (!this.order.firstName || !this.order.lastName || !this.order.contact || !this.order.email) {
                     alert("Please fill in all required fields.");
                     return;
                 }
             
-                // Validate name fields (first name and last name)
+                // Validate that the first and last name contain only letters and spaces
                 const nameRegex = /^[a-zA-Z\s]+$/;
                 if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
                     alert("First and Last Name must contain only letters.");
                     return;
                 }
             
-                // Check if payment method is 'Card' and card number is provided
+                // If the payment method is "Card", ensure the card number is filled
                 if (this.order.paymentMethod === 'Card' && !this.order.cardNumber) {
                     alert("Please enter your card details.");
                     return;
                 }
             
-                // Proceed to submit the order if everything is valid
+                // If all checks pass, proceed with form submission
                 const orderData = {
                     name: `${this.order.firstName} ${this.order.lastName}`,
                     phoneNumber: this.order.contact,
@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 .then(response => response.json())
                 .then(data => {
                     alert("Order submitted successfully!");
-                    this.cart = []; // Clear the cart after submission
+                    this.cart = [];
                     this.order = {
                         firstName: '',
                         lastName: '',
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         paymentMethod: 'Cash',
                         cardNumber: '',
                     };
-                    this.showProduct = true; // Go back to the product page
+                    this.showProduct = true;
                 })
                 .catch(error => {
                     console.error("Error submitting order:", error);
