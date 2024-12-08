@@ -1,4 +1,3 @@
-
 // Wait until the DOM content is fully loaded before initializing Vue
 document.addEventListener('DOMContentLoaded', function () {
     new Vue({
