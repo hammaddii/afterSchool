@@ -76,8 +76,9 @@ document.addEventListener('DOMContentLoaded', function () {
                     return;
                 }
 
-                if (!this.validateName(this.order.firstName) || !this.validateName(this.order.lastName)) {
-                    alert("Name must contain only letters.");
+                const nameRegex = /^[a-zA-Z\s]+$/; // Letters and spaces only
+                if (!nameRegex.test(this.order.firstName) || !nameRegex.test(this.order.lastName)) {
+                    alert("First and Last Name must contain only letters.");
                     return;
                 }
 
@@ -169,9 +170,13 @@ document.addEventListener('DOMContentLoaded', function () {
                 this.order.contact = contactInput.replace(/[^0-9+]/g, '');
             },
 
-            validateName(name) {
-                const nameRegex = /^[a-zA-Z\s]+$/; // Allow letters and spaces
-                return nameRegex.test(name);
+            validateName(field) {
+                const nameRegex = /^[a-zA-Z\s]*$/;
+                const value = this.order[field];
+                if (!nameRegex.test(value)) {
+                    // Remove invalid characters
+                    this.order[field] = value.replace(/[^a-zA-Z\s]/g, '');
+                }
             },
 
             sortField(criterion) {
